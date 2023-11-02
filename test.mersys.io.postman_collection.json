@@ -1,0 +1,4488 @@
+{
+	"info": {
+		"_postman_id": "80d4516c-9c80-4e70-ab0e-4839afb99e8c",
+		"name": "test.mersys.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30630731"
+	},
+	"item": [
+		{
+			"name": "+ Setup",
+			"item": [
+				{
+					"name": "Parameters",
+					"item": [
+						{
+							"name": "Country",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Country search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries",
+											"host": [
+												"{{url}}countries"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add e new Country",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"countryName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"countryID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomCountry}} - {{$randomInt}}\",\r\n  \"code\": \"{{$randomCountryCode}}\",\r\n  \"translateName\": [],\r\n  \"hasState\": false\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries",
+											"host": [
+												"{{url}}countries"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Country",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{countryName}}\",\r\n  \"code\": \"{{$randomCountryCode}}\",\r\n  \"translateName\": [],\r\n  \"hasState\": false\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries",
+											"host": [
+												"{{url}}countries"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search  a new Country added",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"console.log(\"after request\"); \r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "   {\r\n       \"name\":\"{{countryName}}\"\r\n   }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries/search",
+											"host": [
+												"{{url}}countries"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Country",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"countryName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"countryID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{countryID}}\",\r\n  \"name\": \"Updated Country-{{$randomInt}}\",\r\n  \"code\": \"{{$randomCountryCode}}\",\r\n  \"translateName\": [],\r\n  \"hasState\": false\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries",
+											"host": [
+												"{{url}}countries"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search a Country edited",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"console.log(\"after request\"); \r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "   {\r\n       \"name\":\"{{countryName}}\"\r\n   }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries/search",
+											"host": [
+												"{{url}}countries"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Country",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries/{{countryID}}",
+											"host": [
+												"{{url}}countries"
+											],
+											"path": [
+												"{{countryID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Country again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}countries/{{countryID}}",
+											"host": [
+												"{{url}}countries"
+											],
+											"path": [
+												"{{countryID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Bank Accounts",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Banka Accounts search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts/search",
+											"host": [
+												"{{url}}bank-accounts"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Banka Accounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"BankAccountName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"BankAccountIban\",gelenData.iban);\r",
+													"pm.collectionVariables.set(\"BankintegrationCode\",gelenData.code);\r",
+													"pm.collectionVariables.set(\"BankAccountID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{   \r\n    \"name\": \"{{$randomBankAccountName}}\",\r\n    \"iban\": \"{{$randomBankAccountIban}}\",\r\n    \"integrationCode\": \"{{$randomInt}}\",\r\n    \"schoolId\": \"646cbb07acf2ee0d37c6d984\",\r\n    \"currency\": \"EUR\",\r\n    \"deleted\": false,\r\n    \"active\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts",
+											"host": [
+												"{{url}}bank-accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Banka Accounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{   \r\n    \"id\": \"{{BankAccountID}}\",\r\n    \"name\": \"{{BankAccountName}}\",\r\n    \"iban\": \"{{$randomBankAccountIban}}\",\r\n    \"integrationCode\": \"{{$randomInt}}\",\r\n    \"schoolId\": \"646cbb07acf2ee0d37c6d984\",\r\n    \"currency\": \"EUR\",\r\n    \"deleted\": false,\r\n    \"active\": true\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts",
+											"host": [
+												"{{url}}bank-accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search a new Banka Accounts added",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{   \"id\":\"{{BankAccountID}}\",\r\n    \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts/search",
+											"host": [
+												"{{url}}bank-accounts"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Banka Accounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{   \"id\":\"{{BankAccountID}}\",\r\n    \"name\": \"{{$randomBankAccountName}}\",\r\n    \"iban\": \"{{$randomBankAccountIban}}\",\r\n    \"integrationCode\": \"{{$randomInt}}\",\r\n    \"schoolId\": \"646cbb07acf2ee0d37c6d984\",\r\n    \"currency\": \"EUR\",\r\n    \"deleted\": false,\r\n    \"active\": true\r\n}\r\n\r\n\r\n\r\n\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts",
+											"host": [
+												"{{url}}bank-accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search a Banka Accounts  edited",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{   \"id\":\"{{BankAccountID}}\",\r\n    \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts/search",
+											"host": [
+												"{{url}}bank-accounts"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Banka Accounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts/{{BankAccountID}}",
+											"host": [
+												"{{url}}bank-accounts"
+											],
+											"path": [
+												"{{BankAccountID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Banka Accounts again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}bank-accounts/{{BankAccountID}}",
+											"host": [
+												"{{url}}bank-accounts"
+											],
+											"path": [
+												"{{BankAccountID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Grade Levels",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Grade Levels search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}grade-levels",
+											"host": [
+												"{{url}}grade-levels"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Grade Levels",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"DepartmentName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"DepartmentshortName\",gelenData.shortname);\r",
+													"pm.collectionVariables.set(\"order\",gelenData.order);\r",
+													"pm.collectionVariables.set(\"maxApplicationCount\",gelenData.maxApplicationCount);\r",
+													"pm.collectionVariables.set(\"GreadeLevelsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"order\": {{$randomInt}},\r\n  \"shortName\": \"{{$randomDepartment}}\",\r\n  \"nextGradeLevel\": null,\r\n  \"active\": true,\r\n  \"translateName\": [],\r\n  \"translateShortName\": [],\r\n  \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n  \"schoolIds\": [\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\"\r\n  ],\r\n  \"showToAllSchools\": false,\r\n  \"maxApplicationCount\": {{$randomInt}}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}grade-levels",
+											"host": [
+												"{{url}}grade-levels"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Grade Levels",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"name\": \"{{DepartmentName}}\",\r\n  \"order\": {{$randomInt}},\r\n  \"shortName\": \"{{$randomDepartment}}\",\r\n  \"nextGradeLevel\": null,\r\n  \"active\": true,\r\n  \"translateName\": [],\r\n  \"translateShortName\": [],\r\n  \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n  \"schoolIds\": [\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\"\r\n  ],\r\n  \"showToAllSchools\": false,\r\n  \"maxApplicationCount\": {{$randomInt}}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}grade-levels",
+											"host": [
+												"{{url}}grade-levels"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Grade Levels",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{ \r\n  \"id\": \"{{GreadeLevelsID}}\",\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"order\": {{$randomInt}},\r\n  \"shortName\": \"{{$randomDepartment}}\",\r\n  \"nextGradeLevel\": null,\r\n  \"active\": true,\r\n  \"translateName\": [],\r\n  \"translateShortName\": [],\r\n  \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n  \"schoolIds\": [\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\",\r\n    \"646cbb07acf2ee0d37c6d984\"\r\n  ],\r\n  \"showToAllSchools\": false,\r\n  \"maxApplicationCount\": {{$randomInt}}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}grade-levels",
+											"host": [
+												"{{url}}grade-levels"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Grade Levels",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}grade-levels/{{GreadeLevelsID}}",
+											"host": [
+												"{{url}}grade-levels"
+											],
+											"path": [
+												"{{GreadeLevelsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Grade Levels again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}grade-levels/{{GreadeLevelsID}}",
+											"host": [
+												"{{url}}grade-levels"
+											],
+											"path": [
+												"{{GreadeLevelsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Document Types",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Document Types search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attachments/search",
+											"host": [
+												"{{url}}attachments"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Document Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"DocumentTypesName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"DocumentTypesID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomJobType}}\",\r\n  \"description\": \"\",\r\n  \"attachmentStages\": [\r\n    \"CERTIFICATE\"\r\n  ],\r\n  \"active\": true,\r\n  \"required\": true,\r\n  \"useCamera\": false,\r\n  \"translateName\": [],\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attachments/create",
+											"host": [
+												"{{url}}attachments"
+											],
+											"path": [
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Document Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"id\": \"{{DocumentTypesID}}\",\r\n  \"name\": \"{{DepartmentName}}\",\r\n  \"description\": \"\",\r\n  \"attachmentStages\": [\r\n    \"CERTIFICATE\"\r\n  ],\r\n  \"active\": true,\r\n  \"required\": true,\r\n  \"useCamera\": false,\r\n  \"translateName\": [],\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attachments/create",
+											"host": [
+												"{{url}}attachments"
+											],
+											"path": [
+												"create"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Document Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"id\": \"{{DocumentTypesID}}\",\r\n  \"name\": \"{{$randomJobType}}\",\r\n  \"description\": \"\",\r\n  \"attachmentStages\": [\r\n    \"CERTIFICATE\"\r\n  ],\r\n  \"active\": true,\r\n  \"required\": true,\r\n  \"useCamera\": false,\r\n  \"translateName\": [],\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attachments",
+											"host": [
+												"{{url}}attachments"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Document Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attachments/{{DocumentTypesID}}",
+											"host": [
+												"{{url}}attachments"
+											],
+											"path": [
+												"{{DocumentTypesID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Document Types again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attachments/{{DocumentTypesID}}",
+											"host": [
+												"{{url}}attachments"
+											],
+											"path": [
+												"{{DocumentTypesID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Fields",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Fields search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}entity-field/search",
+											"host": [
+												"{{url}}entity-field"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"FieldsName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"FieldsCode\",gelenData.code);\r",
+													"pm.collectionVariables.set(\"FieldsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\",\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"translateName\": [],\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"type\": \"INTEGER\",\r\n  \"listElements\": null,\r\n  \"systemField\": false,\r\n  \"systemFieldName\": null,\r\n  \"children\": []\r\n  \r\n}\r\n\r\n\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}entity-field",
+											"host": [
+												"{{url}}entity-field"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n\r\n{\r\n  \"id\": \"{{FieldsID}}\",\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\",\r\n  \"name\": \"{{FieldsName}}\",\r\n  \"translateName\": [],\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"type\": \"INTEGER\",\r\n  \"listElements\": null,\r\n  \"systemField\": false,\r\n  \"systemFieldName\": null,\r\n  \"children\": []\r\n  \r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}entity-field",
+											"host": [
+												"{{url}}entity-field"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{FieldsID}}\",\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"translateName\": [],\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"type\": \"INTEGER\",\r\n  \"children\": [],\r\n  \"systemField\": false,\r\n  \"systemFieldName\": null,\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}entity-field",
+											"host": [
+												"{{url}}entity-field"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}entity-field/{{FieldsID}}",
+											"host": [
+												"{{url}}entity-field"
+											],
+											"path": [
+												"{{FieldsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Fields again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}entity-field/{{FieldsID}}",
+											"host": [
+												"{{url}}entity-field"
+											],
+											"path": [
+												"{{FieldsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Discounts",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Discounts search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}discounts/search",
+											"host": [
+												"{{url}}discounts"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Discounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"DiscountsName\",gelenData.description);\r",
+													"pm.collectionVariables.set(\"DiscountsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"description\": \"{{$randomBankAccountName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"translateDescription\": [],\r\n  \"priority\": 1111\r\n}\r\n\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}discounts",
+											"host": [
+												"{{url}}discounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Discounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"description\": \"{{DiscountsName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"translateDescription\": [],\r\n  \"priority\": 1111\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}discounts",
+											"host": [
+												"{{url}}discounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Discounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{DiscountsID}}\",\r\n  \"description\": \"{{$randomBankAccountName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"translateDescription\": [],\r\n  \"priority\": 1111\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}discounts",
+											"host": [
+												"{{url}}discounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Discounts",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}discounts/{{DiscountsID}}",
+											"host": [
+												"{{url}}discounts"
+											],
+											"path": [
+												"{{DiscountsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Discounts again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}discounts/{{DiscountsID}}",
+											"host": [
+												"{{url}}discounts"
+											],
+											"path": [
+												"{{DiscountsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Nationalities",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Nationalities search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}nationality",
+											"host": [
+												"{{url}}nationality"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Nationalities",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"NationalitiesName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"NationalitiesID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomCountry}}\",\r\n  \"translateName\": []\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}nationality",
+											"host": [
+												"{{url}}nationality"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Nationalities",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\":null,\r\n  \"name\": \"{{NationalitiesName}}\",\r\n  \"translateName\": []\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}nationality",
+											"host": [
+												"{{url}}nationality"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Nationalities",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\":  \"{{NationalitiesID}}\",\r\n  \"name\": \"{{$randomCountry}}\",\r\n  \"translateName\": []\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}nationality",
+											"host": [
+												"{{url}}nationality"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Nationalities",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}nationality/{{NationalitiesID}}",
+											"host": [
+												"{{url}}nationality"
+											],
+											"path": [
+												"{{NationalitiesID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Nationalities again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}nationality/{{NationalitiesID}}",
+											"host": [
+												"{{url}}nationality"
+											],
+											"path": [
+												"{{NationalitiesID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "School Setup",
+					"item": [
+						{
+							"name": "Departments",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Departments",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"SchoolDepartmentsName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"SchoolDepartmentsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"school\": \"646cbb07acf2ee0d37c6d984\",\r\n  \"sections\": [],\r\n  \"constants\": []\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}department",
+											"host": [
+												"{{url}}department"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Departments",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"{{SchoolDepartmentsName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"school\": \"646cbb07acf2ee0d37c6d984\",\r\n  \"sections\": [],\r\n  \"constants\": []\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}department",
+											"host": [
+												"{{url}}department"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Departments",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{SchoolDepartmentsID}}\",\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"school\": \"646cbb07acf2ee0d37c6d984\",\r\n  \"sections\": [],\r\n  \"constants\": []\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}department",
+											"host": [
+												"{{url}}department"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Departments",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}department/{{SchoolDepartmentsID}}",
+											"host": [
+												"{{url}}department"
+											],
+											"path": [
+												"{{SchoolDepartmentsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Departments again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}department/{{SchoolDepartmentsID}}",
+											"host": [
+												"{{url}}department"
+											],
+											"path": [
+												"{{SchoolDepartmentsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Locations",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Locations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"SchoolLocationsName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"SchoolLocationsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.environment.set(\"variable_key\", \"variable_value\");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"shortName\": \"{{$randomFirstName}}\",\r\n  \"active\": true,\r\n  \"capacity\": \"{{$randomInt}}\",\r\n  \"type\": \"LABORATORY\",\r\n  \"school\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}location",
+											"host": [
+												"{{url}}location"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Locations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{SchoolLocationsName}}\",\r\n  \"shortName\": \"{{$randomFirstName}}\",\r\n  \"active\": true,\r\n  \"capacity\": \"{{$randomInt}}\",\r\n  \"type\": \"LABORATORY\",\r\n  \"school\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}location",
+											"host": [
+												"{{url}}location"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Locations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{SchoolLocationsID}}\",\r\n  \"name\": \"{{$randomDepartment}}\",\r\n  \"shortName\": \"{{$randomFirstName}}\",\r\n  \"active\": true,\r\n  \"capacity\": \"{{$randomInt}}\",\r\n  \"type\": \"LABORATORY\",\r\n  \"school\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}location",
+											"host": [
+												"{{url}}location"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Locations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}location/{{SchoolLocationsID}}",
+											"host": [
+												"{{url}}location"
+											],
+											"path": [
+												"{{SchoolLocationsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Locations again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}location/{{SchoolLocationsID}}",
+											"host": [
+												"{{url}}location"
+											],
+											"path": [
+												"{{SchoolLocationsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "+ Entrance Exams",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Entrance Exams",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Exams search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"id\": \"64c7fda5c4f4db5f52789c67\",\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}exams/search",
+											"host": [
+												"{{url}}exams"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Custom Fields Group",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Custom Field Groups search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"id\": \"6541645e5a767a7dc40d59fb\",\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}custom-field-groups/search",
+											"host": [
+												"{{url}}custom-field-groups"
+											],
+											"path": [
+												"search"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Custom Field Groups",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"GroupsName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"id\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomJobTitle}}\",\r\n  \"orderNo\": \"{{$randomInt}}\",\r\n  \"columnSize\": \"2\",\r\n  \"translateName\": [],\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}custom-field-groups",
+											"host": [
+												"{{url}}custom-field-groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Custom Field Groups",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{GroupsName}}\",\r\n  \"orderNo\": \"50\",\r\n  \"columnSize\": \"2\",\r\n  \"translateName\": [],\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}custom-field-groups",
+											"host": [
+												"{{url}}custom-field-groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Custom Field Groups",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{id}}\",\r\n  \"name\": \"{{$randomUserName}}\",\r\n  \"orderNo\": \"{{$randomInt}}\",\r\n  \"columnSize\": \"2\",\r\n  \"translateName\": [],\r\n  \"schoolId\": \"646cbb07acf2ee0d37c6d984\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}custom-field-groups",
+											"host": [
+												"{{url}}custom-field-groups"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Custom Field Groups",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}custom-field-groups/{{id}}",
+											"host": [
+												"{{url}}custom-field-groups"
+											],
+											"path": [
+												"{{id}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Custom Field Groups again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}custom-field-groups/{{id}}",
+											"host": [
+												"{{url}}custom-field-groups"
+											],
+											"path": [
+												"{{id}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "+ Human Resources",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Positions",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Positions",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"JobTitleName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"PositionsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomJobTitle}}\",\r\n  \"shortName\": \"{{$randomJobType}}\",\r\n  \"translateName\": [],\r\n  \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n  \"active\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}employee-position",
+											"host": [
+												"{{url}}employee-position"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Positions",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{JobTitleName}}\",\r\n  \"shortName\": \"{{$randomJobType}}\",\r\n  \"translateName\": [],\r\n  \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n  \"active\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}employee-position",
+											"host": [
+												"{{url}}employee-position"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Positions",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{PositionsID}}\",\r\n  \"name\": \"{{$randomJobTitle}}\",\r\n  \"shortName\": \"{{$randomJobType}}\",\r\n  \"translateName\": [],\r\n  \"tenantId\": \"646cb816433c0f46e7d44cb0\",\r\n  \"active\": true\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}employee-position",
+											"host": [
+												"{{url}}employee-position"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Positions",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}employee-position/{{PositionsID}}",
+											"host": [
+												"{{url}}employee-position"
+											],
+											"path": [
+												"{{PositionsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Positions again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}employee-position/{{PositionsID}}",
+											"host": [
+												"{{url}}employee-position"
+											],
+											"path": [
+												"{{PositionsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Attestations",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Attestations search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attestation",
+											"host": [
+												"{{url}}attestation"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Attestations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"AttestationsName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"AttestationsID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomFileType}}\",\r\n  \"translateName\": []\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attestation",
+											"host": [
+												"{{url}}attestation"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Attestations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{AttestationsName}}\",\r\n  \"translateName\": []\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attestation",
+											"host": [
+												"{{url}}attestation"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Attestations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{AttestationsID}}\",\r\n  \"name\": \"{{$randomFileType}}\",\r\n  \"translateName\": []\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attestation",
+											"host": [
+												"{{url}}attestation"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Attestations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attestation/{{AttestationsID}}",
+											"host": [
+												"{{url}}attestation"
+											],
+											"path": [
+												"{{AttestationsID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Attestations again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}attestation/{{AttestationsID}}",
+											"host": [
+												"{{url}}attestation"
+											],
+											"path": [
+												"{{AttestationsID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Position Categories",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Position Categories search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}position-category",
+											"host": [
+												"{{url}}position-category"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Position Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"console.log(\"after request\"); \r",
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"PositionCategoriesName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"PositionCategoriesID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomJobTitle}}\",\r\n  \"translateName\": []\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}position-category",
+											"host": [
+												"{{url}}position-category"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Position Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{PositionCategoriesName}}\",\r\n  \"translateName\": []\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}position-category",
+											"host": [
+												"{{url}}position-category"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Position Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{PositionCategoriesID}}\",\r\n  \"name\": \"{{$randomJobTitle}}\",\r\n  \"translateName\": []\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}position-category",
+											"host": [
+												"{{url}}position-category"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Position Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}position-category/{{PositionCategoriesID}}",
+											"host": [
+												"{{url}}position-category"
+											],
+											"path": [
+												"{{PositionCategoriesID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Position Categories again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}position-category/{{PositionCategoriesID}}",
+											"host": [
+												"{{url}}position-category"
+											],
+											"path": [
+												"{{PositionCategoriesID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "+ Education",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Subject Categories",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"rememberMe\": \"true\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{login}}",
+											"host": [
+												"{{login}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Subject Categories search",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories",
+											"host": [
+												"{{url}}subject-categories"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add a new Subject Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var gelenData=pm.response.json();\r",
+													"pm.collectionVariables.set(\"SubjectCategoriesName\",gelenData.name);\r",
+													"pm.collectionVariables.set(\"SubjectCategoriesID\",gelenData.id);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{$randomFileName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"translateName\": []\r\n}\r\n\r\n\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories",
+											"host": [
+												"{{url}}subject-categories"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "add the same added Subject Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": null,\r\n  \"name\": \"{{SubjectCategoriesName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"translateName\": []\r\n}\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories",
+											"host": [
+												"{{url}}subject-categories"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "search  a new Subject Categories added",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"console.log(\"after request\"); \r",
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "   {\r\n       \"id\":\"{{SubjectCategoriesID}}\"\r\n   }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories/{{SubjectCategoriesID}}",
+											"host": [
+												"{{url}}subject-categories"
+											],
+											"path": [
+												"{{SubjectCategoriesID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit added Subject Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "\r\n{\r\n  \"id\": \"{{SubjectCategoriesID}}\",\r\n  \"name\": \"{{$randomFileName}}\",\r\n  \"code\": \"{{$randomInt}}\",\r\n  \"active\": true,\r\n  \"translateName\": []\r\n}\r\n\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories",
+											"host": [
+												"{{url}}subject-categories"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete edited Subject Categories",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories/{{SubjectCategoriesID}}",
+											"host": [
+												"{{url}}subject-categories"
+											],
+											"path": [
+												"{{SubjectCategoriesID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete the same edited Subject Categories again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"console.log(\"before request\");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}subject-categories/{{SubjectCategoriesID}}",
+											"host": [
+												"{{url}}subject-categories"
+											],
+											"path": [
+												"{{SubjectCategoriesID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "SubjectCategoriesID",
+			"value": ""
+		},
+		{
+			"key": "SubjectCategoriesName",
+			"value": ""
+		},
+		{
+			"key": "PositionCategoriesName",
+			"value": ""
+		},
+		{
+			"key": "PositionCategoriesID",
+			"value": ""
+		},
+		{
+			"key": "BankAccountName",
+			"value": ""
+		},
+		{
+			"key": "BankAccountIban",
+			"value": ""
+		},
+		{
+			"key": "BankintegrationCode",
+			"value": ""
+		},
+		{
+			"key": "BankAccountID",
+			"value": ""
+		},
+		{
+			"key": "countryName",
+			"value": ""
+		},
+		{
+			"key": "countryID",
+			"value": ""
+		},
+		{
+			"key": "NationalitiesName",
+			"value": ""
+		},
+		{
+			"key": "NationalitiesID",
+			"value": ""
+		},
+		{
+			"key": "SchoolDepartmentsName",
+			"value": ""
+		},
+		{
+			"key": "SchoolDepartmentsID",
+			"value": ""
+		},
+		{
+			"key": "userID",
+			"value": ""
+		},
+		{
+			"key": "AttestationsName",
+			"value": ""
+		},
+		{
+			"key": "AttestationsID",
+			"value": ""
+		},
+		{
+			"key": "JobTitleName",
+			"value": ""
+		},
+		{
+			"key": "PositionsID",
+			"value": ""
+		},
+		{
+			"key": "FieldsName",
+			"value": ""
+		},
+		{
+			"key": "FieldsCode",
+			"value": ""
+		},
+		{
+			"key": "FieldsID",
+			"value": ""
+		},
+		{
+			"key": "DocumentTypesName",
+			"value": ""
+		},
+		{
+			"key": "DocumentTypesID",
+			"value": ""
+		},
+		{
+			"key": "ExamsName",
+			"value": ""
+		},
+		{
+			"key": "ID",
+			"value": ""
+		},
+		{
+			"key": "ExID",
+			"value": ""
+		},
+		{
+			"key": "GroupsName",
+			"value": ""
+		},
+		{
+			"key": "GroupsID",
+			"value": ""
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}
